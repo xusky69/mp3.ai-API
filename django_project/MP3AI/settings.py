@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'accounts',
     'mp3',
+    'django_cleanup.apps.CleanupConfig',
 ]
 
 MIDDLEWARE = [
@@ -106,6 +107,35 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# Logging
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'django_handler': {
+            'level': 'ERROR',
+            'class': 'logging.FileHandler',
+            'filename': os.path.join(BASE_DIR, 'logs/django.log'),
+        },
+        'mp3_handler': {
+            'level': 'ERROR',
+            'class': 'logging.FileHandler',
+            'filename': os.path.join(BASE_DIR, 'logs/mp3.log'),
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['django_handler'],
+            'level': 'ERROR',
+            'propagate': True,
+        },
+        'mp3': {
+            'handlers': ['mp3_handler'],
+            'level': 'ERROR',
+            'propagate': True,
+        },
+    },
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
@@ -132,3 +162,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'accounts.User'
 
 # PROJECT-SPECIFIC SETTINGS
+
+AUDIO_ROOT = os.path.join(BASE_DIR, 'audio_files/')
+S2T_MODEL = "facebook/s2t-small-librispeech-asr"
+S2T_PROCESSOR = "facebook/s2t-small-librispeech-asr"
