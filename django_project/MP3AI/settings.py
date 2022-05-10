@@ -164,5 +164,9 @@ AUTH_USER_MODEL = 'accounts.User'
 # PROJECT-SPECIFIC SETTINGS
 
 AUDIO_ROOT = os.path.join(BASE_DIR, 'audio_files/')
+
 S2T_MODEL = "facebook/s2t-small-librispeech-asr"
 S2T_PROCESSOR = "facebook/s2t-small-librispeech-asr"
+
+SENT_MODEL = "cardiffnlp/twitter-roberta-base-sentiment"
+SENT_TKNZR =  "cardiffnlp/twitter-roberta-base-sentiment"
