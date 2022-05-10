@@ -170,3 +170,5 @@ S2T_PROCESSOR = "facebook/s2t-small-librispeech-asr"
 
 SENT_MODEL = "cardiffnlp/twitter-roberta-base-sentiment"
 SENT_TKNZR =  "cardiffnlp/twitter-roberta-base-sentiment"
+
+ML_INFERENCE = False
