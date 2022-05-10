@@ -7,5 +7,5 @@ class RecordingSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Recording
-        exclude = ['id']
+        exclude = ['id',]
         # read_only_fields = ['audio_file']

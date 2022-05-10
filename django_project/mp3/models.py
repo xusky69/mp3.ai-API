@@ -4,18 +4,18 @@ from accounts.models import User
 from django.conf import settings
 from django.db import models
 
-from mp3.api.common import (initialize_model_processor_S2T,
-                            initialize_model_tokenizer_SENT,
-                            analyze_sentiment,
-                            load_audio_file,
-                            transcript_file)
+# from mp3.api.common import (initialize_model_processor_S2T,
+#                             initialize_model_tokenizer_SENT,
+#                             analyze_sentiment,
+#                             load_audio_file,
+#                             transcript_file)
 
-(s2t_model, s2t_processor) = initialize_model_processor_S2T(model_name=settings.S2T_MODEL,
-                                                            processor_name=settings.S2T_PROCESSOR)
+# (s2t_model, s2t_processor) = initialize_model_processor_S2T(model_name=settings.S2T_MODEL,
+#                                                             processor_name=settings.S2T_PROCESSOR)
 
 
-(sent_model, sent_tokenizer) = initialize_model_tokenizer_SENT(model_name=settings.SENT_MODEL,
-                                                               tokenizer_name=settings.SENT_TKNZR)
+# (sent_model, sent_tokenizer) = initialize_model_tokenizer_SENT(model_name=settings.SENT_MODEL,
+#                                                                tokenizer_name=settings.SENT_TKNZR)
 
 class Recording(models.Model):
 
@@ -48,24 +48,24 @@ class Recording(models.Model):
 
         super(Recording, self).save(*args, **kwargs)
 
-        audio_path = str(self.audio_file.path)
+        # audio_path = str(self.audio_file.path)
 
-        data, sampling_rate = load_audio_file(audio_path)
+        # data, sampling_rate = load_audio_file(audio_path)
 
-        data = data.reshape([-1])
+        # data = data.reshape([-1])
 
-        transcript = transcript_file(data=data,
-                                     sampling_rate=sampling_rate,
-                                     model=s2t_model,
-                                     processor=s2t_processor)
+        # transcript = transcript_file(data=data,
+        #                              sampling_rate=sampling_rate,
+        #                              model=s2t_model,
+        #                              processor=s2t_processor)
 
-        self.transcript = transcript[0]
-        sentence = transcript[0]
+        # self.transcript = transcript[0]
+        # sentence = transcript[0]
 
-        sentiment = analyze_sentiment(sentence=sentence,
-                                      model=sent_model,
-                                      tokenizer=sent_tokenizer)
+        # sentiment = analyze_sentiment(sentence=sentence,
+        #                               model=sent_model,
+        #                               tokenizer=sent_tokenizer)
 
-        self.sentiment_negative = sentiment[0]
-        self.sentiment_neutral = sentiment[1]
-        self.sentiment_positive = sentiment[2]
+        # self.sentiment_negative = sentiment[0]
+        # self.sentiment_neutral = sentiment[1]
+        # self.sentiment_positive = sentiment[2]
