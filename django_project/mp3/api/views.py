@@ -1,13 +1,16 @@
 import json
+
 from django.conf import settings
-from mp3.api.common import (analyze_sentiment, initialize_model_processor_S2T,
-                            initialize_model_tokenizer_SENT, load_audio_file,
-                            transcript_file, split_words, get_word_freq)
 from mp3.api.permissions import IsAuthorOrReadOnly
 from mp3.api.serializers import RecordingSerializer
 from mp3.models import Recording
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
+from mp3.common import (analyze_sentiment, get_word_freq,
+                        initialize_model_processor_S2T,
+                        initialize_model_tokenizer_SENT, load_audio_file,
+                        split_words, transcript_file)
+
 
 if settings.ML_INFERENCE:
 

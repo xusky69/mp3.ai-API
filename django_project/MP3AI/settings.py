@@ -11,7 +11,6 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
 import os
-import json
 from pathlib import Path
 
 from dotenv import load_dotenv
@@ -30,7 +29,7 @@ SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG') == 'TRUE'
 DOCKER = os.getenv('DOCKER') == 'TRUE'
-
+print(os.getenv('DOCKER'))
 ALLOWED_HOSTS = []
 
 
@@ -43,7 +42,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # 'django_extensions',
     'rest_framework',
     'django_filters',
     'accounts',
@@ -87,6 +85,7 @@ WSGI_APPLICATION = 'MP3AI.wsgi.application'
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
 if DOCKER:
+    print('USING DOCKER POSTGRES DB')
     ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'nginx', '[::1]']
     DATABASES = {
         'default': {
@@ -100,6 +99,7 @@ if DOCKER:
     }
 
 else:
+    print('USING SQLITE DB')
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
@@ -200,11 +200,11 @@ WHITENOISE_MANIFEST_STRICT = False
 AUDIO_ROOT = os.path.join(BASE_DIR, 'audio_files/')
 
 # SPEECH 2 TEXT MODEL
-S2T_MODEL = "facebook/s2t-small-librispeech-asr"
-S2T_PROCESSOR = "facebook/s2t-small-librispeech-asr"
+S2T_MODEL = os.getenv('S2T_MODEL')
+S2T_PROCESSOR = os.getenv('S2T_PROCESSOR')
 
 # SENTIMENT ANALYSIS MODEL
-SENT_MODEL = "cardiffnlp/twitter-roberta-base-sentiment"
-SENT_TKNZR = "cardiffnlp/twitter-roberta-base-sentiment"
+SENT_MODEL = os.getenv('SENT_MODEL')
+SENT_TKNZR = os.getenv('SENT_TKNZR')
 
 ML_INFERENCE = False

@@ -10,6 +10,7 @@ services:
       - "postgres"
     volumes:
       - ./docker_volumes/audio_files:/home/MP3API/audio_files
+      - ./docker_volumes/logs:/home/MP3API/logs
   postgres:
     image: postgres
     environment:

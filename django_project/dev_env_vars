@@ -2,3 +2,7 @@ TIME_ZONE='America/Bogota'
 DEBUG=TRUE
 DOCKER=FALSE
 DJANGO_SECRET_KEY="x*q()3%*-685o#8u%tg$c3*%e1$5ph8&$$$ljcizku6p_osxu#"
+S2T_MODEL="facebook/s2t-small-librispeech-asr"
+S2T_PROCESSOR="facebook/s2t-small-librispeech-asr"
+SENT_MODEL="cardiffnlp/twitter-roberta-base-sentiment"
+SENT_TKNZR="cardiffnlp/twitter-roberta-base-sentiment"
