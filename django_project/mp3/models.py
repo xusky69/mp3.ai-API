@@ -24,6 +24,8 @@ class Recording(models.Model):
 
     transcript = models.TextField(blank=True, default='', editable=False)
 
+    timestamps = models.BooleanField(editable=False)
+
     words = models.TextField(blank=True, default='', editable=True)
 
     creation_date = models.DateTimeField(auto_now_add=True)

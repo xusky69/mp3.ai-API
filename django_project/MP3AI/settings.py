@@ -29,7 +29,6 @@ SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG') == 'TRUE'
 DOCKER = os.getenv('DOCKER') == 'TRUE'
-print(os.getenv('DOCKER'))
 ALLOWED_HOSTS = []
 
 
@@ -85,7 +84,7 @@ WSGI_APPLICATION = 'MP3AI.wsgi.application'
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
 if DOCKER:
-    print('USING DOCKER POSTGRES DB')
+    # print('USING DOCKER POSTGRES DB')
     ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'nginx', '[::1]']
     DATABASES = {
         'default': {
@@ -99,7 +98,7 @@ if DOCKER:
     }
 
 else:
-    print('USING SQLITE DB')
+    # print('USING SQLITE DB')
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
@@ -180,6 +179,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'accounts.User'
 
+# REST framework
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
@@ -195,16 +195,23 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static/')]
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 WHITENOISE_MANIFEST_STRICT = False
 
-# PROJECT-SPECIFIC SETTINGS
+### ------------------------------------------- ###
+### -------- PROJECT-SPECIFIC SETTINGS -------- ###
+### ------------------------------------------- ###
 
 AUDIO_ROOT = os.path.join(BASE_DIR, 'audio_files/')
 
-# SPEECH 2 TEXT MODEL
+# SPEECH 2 TEXT VOSK MODEL
+VOSK_MODEL = "vosk/vosk-model-small-en-us-0.15"
+
+# SPEECH 2 TEXT TRANSFORMER MODEL
 S2T_MODEL = os.getenv('S2T_MODEL')
 S2T_PROCESSOR = os.getenv('S2T_PROCESSOR')
 
-# SENTIMENT ANALYSIS MODEL
+# SENTIMENT ANALYSIS TRANSFORMER MODEL
 SENT_MODEL = os.getenv('SENT_MODEL')
 SENT_TKNZR = os.getenv('SENT_TKNZR')
 
-ML_INFERENCE = False
+ENABLE_SENT = False
+ENABLE_VOSK = False
+ENABLE_HFS2T = False

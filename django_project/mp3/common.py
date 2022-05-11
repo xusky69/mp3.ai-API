@@ -1,11 +1,13 @@
 from typing import List, Tuple
-
+import io
 import torch
 import torchaudio
+from pydub import AudioSegment
 from scipy.special import softmax
 from transformers import (AutoModelForSequenceClassification, AutoTokenizer,
                           Speech2TextForConditionalGeneration,
                           Speech2TextProcessor)
+from vosk import KaldiRecognizer, Model, SetLogLevel
 
 
 def initialize_model_processor_S2T(model_name: str,
@@ -71,3 +73,30 @@ def get_word_freq(word_list: list, sentence: str) -> dict:
             pass
 
     return word_freq
+
+
+def initialize_model_VOSK(model_path: str) -> Model:
+    model = Model(model_path)
+    return model
+
+
+def mp3_to_wav(source: str, skip: int = 0, cut_at: int = 30):
+    '''
+    based from 
+    towardsdatascience.com/transcribe-large-audio-files-offline-with-vosk-a77ee8f7aa28
+    '''
+
+    if skip >= cut_at:
+        assert False, "'cut_at' vakue must be greater thank 'skip' value"
+
+    sound = AudioSegment.from_mp3(source)  # load source
+    sound = sound.set_channels(1)  # mono
+    sound = sound.set_frame_rate(16000)  # 16000Hz
+
+    sound = sound[skip*1000:cut_at*1000]
+    # output_path = os.path.splitext(source)[0]+".wav"
+
+    audio = io.BytesIO()
+    sound.export(audio, format="wav")
+
+    return audio

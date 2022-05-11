@@ -5,20 +5,23 @@ from mp3.api.permissions import IsAuthorOrReadOnly
 from mp3.api.serializers import RecordingSerializer
 from mp3.models import Recording
 from rest_framework import viewsets
-from rest_framework.permissions import IsAuthenticated
 from mp3.common import (analyze_sentiment, get_word_freq,
+                        initialize_model_VOSK,
                         initialize_model_processor_S2T,
                         initialize_model_tokenizer_SENT, load_audio_file,
                         split_words, transcript_file)
 
 
-if settings.ML_INFERENCE:
-
+if settings.ENABLE_HFS2T:
     (s2t_model, s2t_processor) = initialize_model_processor_S2T(model_name=settings.S2T_MODEL,
                                                                 processor_name=settings.S2T_PROCESSOR)
 
+if settings.ENABLE_SENT:
     (sent_model, sent_tokenizer) = initialize_model_tokenizer_SENT(model_name=settings.SENT_MODEL,
                                                                    tokenizer_name=settings.SENT_TKNZR)
+
+if settings.ENABLE_VOSK:
+    model = initialize_model_VOSK(model_path=settings.VOSK_MODEL)
 
 
 class RecordingViewSet(viewsets.ModelViewSet):
@@ -37,20 +40,27 @@ class RecordingViewSet(viewsets.ModelViewSet):
         instance.words = json.dumps(word_list)
         instance.save()
 
-        if settings.ML_INFERENCE:
+        if instance.timestamps and settings.ENABLE_VOSK:
+            pass
+
+        elif settings.ENABLE_HFS2T:
 
             audio_path = str(instance.audio_file.path)
 
             data, sampling_rate = load_audio_file(audio_path)
             data = data.reshape([-1])
 
-            transcript = transcript_file(data=data,
-                                         sampling_rate=sampling_rate,
-                                         model=s2t_model,
-                                         processor=s2t_processor)
+            sentence = transcript_file(data=data,
+                                       sampling_rate=sampling_rate,
+                                       model=s2t_model,
+                                       processor=s2t_processor)[0]
 
-            instance.transcript = transcript[0]
-            sentence = transcript[0]
+            instance.transcript = sentence
+
+            instance.save()
+
+        if settings.ENABLE_SENT and (settings.ENABLE_VOSK or
+                                     settings.ENABLE_HFS2T):
 
             instance.words = json.dumps(get_word_freq(
                 word_list=word_list, sentence=sentence))

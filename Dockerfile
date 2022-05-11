@@ -5,7 +5,7 @@ FROM python:3.10 as base
 WORKDIR /home/MP3API/
 
 # install linux dependencies
-RUN apt-get update && apt-get -y install sqlite3 libsqlite3-dev
+RUN apt-get update && apt-get -y install sqlite3 libsqlite3-dev ffmpeg
 
 # copy the requirements file to the working directory
 COPY ./django_project/requirements.txt .
