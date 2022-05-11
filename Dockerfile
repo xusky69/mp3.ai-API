@@ -12,7 +12,7 @@ COPY ./django_project/requirements.txt .
 
 # install python dependencies
 RUN pip install -r requirements.txt
-
+RUN pip install django-extensions
 # copy the project to the working directory
 ADD ./django_project/ .
 
@@ -36,4 +36,4 @@ RUN cp docker_env_vars .env
 
 RUN echo "yes" | python manage.py collectstatic
 # command to run on container start when nothing else is run:
-CMD gunicorn -b 0.0.0.0:8000 --timeout=$TIMEOUT --workers=$WORKERS --env DJANGO_SETTINGS_MODULE=WFRP_API.settings WFRP_API.wsgi
+CMD gunicorn -b 0.0.0.0:8000 --timeout=$TIMEOUT --workers=$WORKERS --env DJANGO_SETTINGS_MODULE=MP3AI.settings MP3AI.wsgi

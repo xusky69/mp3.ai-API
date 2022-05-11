@@ -30,7 +30,7 @@ class RecordingViewSet(viewsets.ModelViewSet):
 
         serializer.save(user=self.request.user)
         instance = serializer.instance
-        word_list = list(set(split_words(words = instance.words)))
+        word_list = list(set(split_words(words=instance.words)))
         instance.words = json.dumps(word_list)
         instance.save()
 
@@ -49,8 +49,8 @@ class RecordingViewSet(viewsets.ModelViewSet):
             instance.transcript = transcript[0]
             sentence = transcript[0]
 
-            instance.words = json.dumps(get_word_freq(word_list = word_list, sentence = sentence))
-            
+            instance.words = json.dumps(get_word_freq(
+                word_list=word_list, sentence=sentence))
 
             sentiment = analyze_sentiment(sentence=sentence,
                                           model=sent_model,
