@@ -24,7 +24,8 @@ class Recording(models.Model):
     name = models.CharField(max_length=32)
     uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
 
-    audio_file = models.FileField(upload_to='audio_files/', blank=True)
+    audio_file = models.FileField(
+        upload_to='audio_files/', blank=True, editable=False)
 
     sentiment_positive = models.FloatField(
         blank=True, default=0, editable=False)
@@ -32,7 +33,10 @@ class Recording(models.Model):
         blank=True, default=0, editable=False)
     sentiment_neutral = models.FloatField(
         blank=True, default=0, editable=False)
+
     transcript = models.TextField(blank=True, default='', editable=False)
+
+    words = models.TextField(blank=True, default='', editable=True)
 
     creation_date = models.DateTimeField(auto_now_add=True)
     last_updated = models.DateTimeField(auto_now=True)

@@ -1,0 +1,5 @@
+### docker-compose common setup commands
+docker-compose up --build
+docker-compose exec django python manage.py makemigrations accounts
+docker-compose exec django python manage.py makemigrations mp3
+docker-compose exec django python manage.py migrate

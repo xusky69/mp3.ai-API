@@ -3,9 +3,9 @@ from typing import List, Tuple
 import torch
 import torchaudio
 from scipy.special import softmax
-from transformers import (Speech2TextForConditionalGeneration,
+from transformers import (AutoModelForSequenceClassification, AutoTokenizer,
+                          Speech2TextForConditionalGeneration,
                           Speech2TextProcessor)
-from transformers import (AutoTokenizer, AutoModelForSequenceClassification)
 
 
 def initialize_model_processor_S2T(model_name: str,
@@ -52,3 +52,22 @@ def analyze_sentiment(sentence: str,
 
 def load_audio_file(file_path: str) -> torch.Tensor:
     return torchaudio.load(file_path)
+
+
+def split_words(words: str) -> str:
+    return [item.strip().lower() for item in words.split(',') if len(item.strip()) > 0]
+
+
+def get_word_freq(word_list: list, sentence: str) -> dict:
+
+    word_freq = {}
+
+    for word in sentence.strip().split(' '):
+        if word not in word_freq.keys() and word in word_list:
+            word_freq[word] = 1
+        elif word in word_list:
+            word_freq[word] += 1
+        else:
+            pass
+
+    return word_freq

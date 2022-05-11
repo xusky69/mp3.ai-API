@@ -1,1 +1,4 @@
+TIME_ZONE='America/Bogota'
+DEBUG=TRUE
+DOCKER=FALSE
 DJANGO_SECRET_KEY="x*q()3%*-685o#8u%tg$c3*%e1$5ph8&$$$ljcizku6p_osxu#"

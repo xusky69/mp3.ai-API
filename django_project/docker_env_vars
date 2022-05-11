@@ -1,0 +1,8 @@
+TIME_ZONE='America/Bogota'
+DEBUG=TRUE
+DOCKER=TRUE
+DJANGO_SECRET_KEY="x*q()3%*-685o#8u%tg$c3*%e1$5ph8&$$$ljcizku6p_osxu#"
+DB_NAME=djangodb
+DB_USER=djangouser
+DB_PSWD=obo696
+DB_HOST=postgres

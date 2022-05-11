@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
 import os
+import json
 from pathlib import Path
 
 from dotenv import load_dotenv
@@ -27,7 +28,8 @@ load_dotenv('.env')
 SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv('DEBUG') == 'TRUE'
+DOCKER = os.getenv('DOCKER') == 'TRUE'
 
 ALLOWED_HOSTS = []
 
@@ -42,6 +44,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'django_filters',
     'accounts',
     'mp3',
     'django_cleanup.apps.CleanupConfig',
@@ -49,6 +52,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    # 'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -81,12 +85,26 @@ WSGI_APPLICATION = 'MP3AI.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+if DOCKER:
+    ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'nginx', '[::1]']
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': os.getenv('DB_NAME'),
+            'USER': os.getenv('DB_USER'),
+            'PASSWORD': os.getenv('DB_PSWD'),
+            'HOST': os.getenv('DB_HOST'),
+            'PORT': '',
+        }
     }
-}
+
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
 
 
 # Password validation
@@ -142,7 +160,7 @@ LOGGING = {
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = os.getenv('TIME_ZONE') or 'UTC'
 
 USE_I18N = True
 
@@ -161,14 +179,31 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'accounts.User'
 
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
+    'DEFAULT_FILTER_BACKENDS': [
+        'django_filters.rest_framework.DjangoFilterBackend'
+    ]
+}
+
+# # WHITENOISE
+# STATIC_ROOT = os.path.join(BASE_DIR, 'assets/')
+# STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static/')]
+# STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+# WHITENOISE_MANIFEST_STRICT = False
+
 # PROJECT-SPECIFIC SETTINGS
 
 AUDIO_ROOT = os.path.join(BASE_DIR, 'audio_files/')
 
+# SPEECH 2 TEXT MODEL
 S2T_MODEL = "facebook/s2t-small-librispeech-asr"
 S2T_PROCESSOR = "facebook/s2t-small-librispeech-asr"
 
+# SENTIMENT ANALYSIS MODEL
 SENT_MODEL = "cardiffnlp/twitter-roberta-base-sentiment"
-SENT_TKNZR =  "cardiffnlp/twitter-roberta-base-sentiment"
+SENT_TKNZR = "cardiffnlp/twitter-roberta-base-sentiment"
 
-ML_INFERENCE = False
+ML_INFERENCE = True
