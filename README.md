@@ -8,7 +8,7 @@ A **REST API** for **transcribing** and **analyzing** mp3 files with **AI**. Thi
 - Transcripts a given **.mp3** audio file
 - Given a set of words, returns a word count
 - Given a set of words, returns the timestamps & confidence values for each one
-- Uses an advanced AI transformer model [roBERTa](https://huggingface.co/cardiffnlp/twitter-roberta-base-sentiment) to idenfity Neutral, Positive & Negative sentiment levels in the audio file
+- Uses an advanced AI transformer model ([roBERTa](https://huggingface.co/cardiffnlp/twitter-roberta-base-sentiment)) to idenfity Neutral, Positive & Negative sentiment levels in the audio file
 - Token authentication
 - Results stored in the database
 - Create, Read & Delete operations for your results
