@@ -14,7 +14,7 @@ class Recording(models.Model):
     uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
 
     audio_file = models.FileField(
-        upload_to='audio_files/', blank=True, editable=True, validators=[FileExtensionValidator(allowed_extensions=["mp3"])])
+        upload_to='audio_files/', blank=True, editable=False, validators=[FileExtensionValidator(allowed_extensions=["mp3"])])
 
     sentiment_positive = models.FloatField(
         blank=True, default=0, editable=False)
@@ -25,7 +25,7 @@ class Recording(models.Model):
 
     transcript = models.TextField(blank=True, default='', editable=False)
 
-    get_timestamps = models.BooleanField(editable=True)
+    get_timestamps = models.BooleanField(editable=True, default=False)
 
     timestamps = models.TextField(blank=True, default='', editable=False)
 
