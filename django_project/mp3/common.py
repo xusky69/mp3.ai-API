@@ -106,7 +106,7 @@ def get_word_freq(word_list: list, sentence: str) -> dict:
     return word_freq
 
 
-def initialize_model_VOSK(model_path: str) -> Model:
+def initialize_model_vosk(model_path: str) -> Model:
     model = Model(model_path)
     return model
 
