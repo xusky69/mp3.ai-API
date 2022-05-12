@@ -1,7 +1,6 @@
 import json
 
 from django.conf import settings
-from rest_framework.permissions import IsAuthenticated
 from mp3.api.permissions import IsAuthorOrReadOnly
 from mp3.api.serializers import RecordingSerializer
 from mp3.common import (analyze_sentiment, get_word_freq,
@@ -9,6 +8,7 @@ from mp3.common import (analyze_sentiment, get_word_freq,
                         split_words, transcript_file_vosk)
 from mp3.models import Recording
 from rest_framework import viewsets
+from rest_framework.permissions import IsAuthenticated
 
 if settings.ENABLE_SENT:
     (sent_model, sent_tokenizer) = initialize_model_tokenizer_SENT(model_name=settings.SENT_MODEL,
@@ -38,8 +38,6 @@ class RecordingViewSet(viewsets.ModelViewSet):
 
         if settings.ENABLE_VOSK:
 
-            print('RUNNING VOSK')
-
             audio_path = str(instance.audio_file.path)
 
             result = transcript_file_vosk(path=audio_path, model=model)
@@ -59,8 +57,6 @@ class RecordingViewSet(viewsets.ModelViewSet):
             instance.timestamps = timestamps
 
         if settings.ENABLE_SENT and settings.ENABLE_VOSK:
-
-            print('RUNNING SENTIMENT')
 
             sentiment = analyze_sentiment(sentence=sentence,
                                           model=sent_model,

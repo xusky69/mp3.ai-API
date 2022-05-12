@@ -13,18 +13,16 @@ COPY ./django_project/requirements.txt .
 # install python dependencies
 RUN pip install -r requirements.txt
 
-RUN apt-get -y install ffmpeg
-
 # copy the cache script to the working directory & run it
-# this will save the cached models to the container and
-# avoids redownloading them each time the container respawns
-# RUN rm -rf .env
-# COPY ./django_project/docker_env_vars ./docker_env_vars
-# RUN cp docker_env_vars .env
-# RUN mkdir scripts/
-# COPY ./django_project/mp3/common.py ./mp3/common.py
-# COPY ./django_project/mp3/docker_cache.py ./mp3/docker_cache.py
-# RUN python ./mp3/docker_cache.py
+# this will save the cached models to the image and
+# avoids redownloading them each time a container respawns
+RUN rm -rf .env
+COPY ./django_project/docker_env_vars ./docker_env_vars
+RUN cp docker_env_vars .env
+RUN mkdir scripts/
+COPY ./django_project/mp3/common.py ./mp3/common.py
+COPY ./django_project/mp3/docker_cache.py ./mp3/docker_cache.py
+RUN python ./mp3/docker_cache.py
 
 # copy the project to the working directory
 ADD ./django_project/ .
@@ -47,14 +45,11 @@ RUN cp docker_env_vars .env
 ENV PYTHONUNBUFFERED 1
 
 # setup gunicorn environment variables:
-ENV WORKERS=2
+ENV WORKERS=1
 ENV TIMEOUT=240
 
 # port exposure
 EXPOSE 8000
-
-# collect statics to be served by whitenoise
-RUN echo "yes" | python manage.py collectstatic
 
 # command to run on container start when nothing else is run:
 CMD gunicorn -b 0.0.0.0:8000 --timeout=$TIMEOUT --workers=$WORKERS --env DJANGO_SETTINGS_MODULE=MP3AI.settings MP3AI.wsgi

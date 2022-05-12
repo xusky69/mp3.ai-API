@@ -189,7 +189,8 @@ REST_FRAMEWORK = {
         'django_filters.rest_framework.DjangoFilterBackend'
     ],
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.TokenAuthentication'
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
     ],
 }
 
@@ -203,16 +204,11 @@ AUDIO_ROOT = os.path.join(BASE_DIR, 'audio_files/')
 # SPEECH 2 TEXT VOSK MODEL
 VOSK_MODEL = "vosk/vosk-model-small-en-us-0.15"
 
-# SPEECH 2 TEXT TRANSFORMER MODEL
-S2T_MODEL = os.getenv('S2T_MODEL')
-S2T_PROCESSOR = os.getenv('S2T_PROCESSOR')
-
 # SENTIMENT ANALYSIS TRANSFORMER MODEL
 SENT_MODEL = os.getenv('SENT_MODEL')
 SENT_TKNZR = os.getenv('SENT_TKNZR')
 
 # ENABLE HUGGINGFACE ROBERTA SENTIMENT MODEL
-ENABLE_SENT = False
-
+ENABLE_SENT = True
 # ENABLE VOSK S2T MODEL
-ENABLE_VOSK = False
+ENABLE_VOSK = True
