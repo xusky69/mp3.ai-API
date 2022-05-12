@@ -42,6 +42,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'rest_framework.authtoken',
+    'djoser',
     'django_filters',
     'accounts',
     'mp3',
@@ -50,7 +52,6 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -186,14 +187,12 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_FILTER_BACKENDS': [
         'django_filters.rest_framework.DjangoFilterBackend'
-    ]
+    ],
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication'
+    ],
 }
 
-# WHITENOISE
-STATIC_ROOT = os.path.join(BASE_DIR, 'assets/')
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static/')]
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-WHITENOISE_MANIFEST_STRICT = False
 
 ### ------------------------------------------- ###
 ### -------- PROJECT-SPECIFIC SETTINGS -------- ###
@@ -213,10 +212,7 @@ SENT_MODEL = os.getenv('SENT_MODEL')
 SENT_TKNZR = os.getenv('SENT_TKNZR')
 
 # ENABLE HUGGINGFACE ROBERTA SENTIMENT MODEL
-ENABLE_SENT = True
+ENABLE_SENT = False
 
 # ENABLE VOSK S2T MODEL
-ENABLE_VOSK = True
-
-# ENABLE HUGGINGFACE S2T TRANSFORMER
-ENABLE_HFS2T = True
+ENABLE_VOSK = False

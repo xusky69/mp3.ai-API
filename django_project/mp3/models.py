@@ -3,6 +3,7 @@ import uuid
 from accounts.models import User
 from django.conf import settings
 from django.db import models
+from django.core.validators import FileExtensionValidator
 
 
 class Recording(models.Model):
@@ -13,7 +14,7 @@ class Recording(models.Model):
     uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
 
     audio_file = models.FileField(
-        upload_to='audio_files/', blank=True, editable=False)
+        upload_to='audio_files/', blank=True, editable=True, validators=[FileExtensionValidator(allowed_extensions=["mp3"])])
 
     sentiment_positive = models.FloatField(
         blank=True, default=0, editable=False)
@@ -24,11 +25,15 @@ class Recording(models.Model):
 
     transcript = models.TextField(blank=True, default='', editable=False)
 
-    get_timestamps = models.BooleanField(editable=False)
+    get_timestamps = models.BooleanField(editable=True)
 
     timestamps = models.TextField(blank=True, default='', editable=False)
 
-    words = models.TextField(blank=True, default='', editable=True)
+    words = models.CharField(blank=True, max_length=32,
+                             default='', editable=True)
+
+    word_freqs = models.CharField(
+        blank=True, default='', editable=False, max_length=48)
 
     creation_date = models.DateTimeField(auto_now_add=True)
     last_updated = models.DateTimeField(auto_now=True)
