@@ -3,13 +3,13 @@ import json
 from django.conf import settings
 from mp3.api.permissions import IsAuthorOrReadOnly
 from mp3.api.serializers import RecordingSerializer
+from mp3.common import (analyze_sentiment, get_word_freq,
+                        initialize_model_processor_S2T,
+                        initialize_model_tokenizer_SENT, initialize_model_VOSK,
+                        load_audio_file, split_words, transcript_file,
+                        transcript_file_vosk)
 from mp3.models import Recording
 from rest_framework import viewsets
-from mp3.common import (analyze_sentiment, get_word_freq,
-                        initialize_model_VOSK,
-                        initialize_model_processor_S2T,
-                        initialize_model_tokenizer_SENT, load_audio_file,
-                        split_words, transcript_file)
 
 
 if settings.ENABLE_HFS2T:
@@ -40,8 +40,19 @@ class RecordingViewSet(viewsets.ModelViewSet):
         instance.words = json.dumps(word_list)
         instance.save()
 
+        print(instance.timestamps)
+
         if instance.timestamps and settings.ENABLE_VOSK:
-            pass
+            
+            audio_path = str(instance.audio_file.path)
+            
+            result = transcript_file_vosk(path = audio_path, model = model)
+            
+            sentence = result['text']
+
+            instance.transcript = sentence
+
+            instance.save()
 
         elif settings.ENABLE_HFS2T:
 

@@ -1,6 +1,8 @@
 from typing import List, Tuple
 import io
+import json
 import torch
+import wave
 import torchaudio
 from pydub import AudioSegment
 from scipy.special import softmax
@@ -9,6 +11,7 @@ from transformers import (AutoModelForSequenceClassification, AutoTokenizer,
                           Speech2TextProcessor)
 from vosk import KaldiRecognizer, Model, SetLogLevel
 
+SetLogLevel(-1)
 
 def initialize_model_processor_S2T(model_name: str,
                                    processor_name: str) -> Tuple[Speech2TextForConditionalGeneration, Speech2TextProcessor]:
@@ -37,6 +40,29 @@ def transcript_file(data: torch.Tensor,
     transcription = processor.batch_decode(model_output)
 
     return transcription
+
+
+def transcript_file_vosk(path: str,
+                         model: Model,
+                         ):
+
+    wf = mp3_to_wav(path, skip=0, cut_at=60)
+    wf = wave.open(wf, "rb")
+
+    rec = KaldiRecognizer(model, wf.getframerate())
+    rec.SetWords(True)
+    rec.SetPartialWords(True)
+
+    while True:
+        data = wf.readframes(4000)
+        if len(data) == 0:
+            break
+        if rec.AcceptWaveform(data):
+            pass
+        else:
+            pass
+
+    return json.loads(rec.FinalResult())
 
 
 def analyze_sentiment(sentence: str,
