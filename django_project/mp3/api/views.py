@@ -26,6 +26,9 @@ class RecordingViewSet(viewsets.ModelViewSet):
     filterset_fields = ('user__username',)
     http_method_names = ['get', 'post', 'delete']
 
+    def get_queryset(self):
+        return Recording.objects.filter(user=self.request.user)
+
     def perform_create(self, serializer):
 
         serializer.save(user=self.request.user)
