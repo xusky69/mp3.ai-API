@@ -8,10 +8,50 @@ A **REST API** for **transcribing** and **analyzing** mp3 files with **AI**. Thi
 - Transcripts a given **.mp3** audio file
 - Given a set of words, returns a word count
 - Given a set of words, returns the timestamps & confidence values for each one
-- Performs a sentiment analysis of the transcript
+- Uses an advanced AI transformer model [roBERTa](https://huggingface.co/cardiffnlp/twitter-roberta-base-sentiment) to idenfity Neutral, Positive & Negative sentiment levels in the audio file
 - Token authentication
 - Results stored in the database
 - Create, Read & Delete operations for your results
+
+Just to exemplify: Given an .mp3 file about [Puppies](https://en.wikipedia.org/wiki/File:Puppy.ogg) and a set of keywords `["puppy", "puppies", "mother"]`, the output of the API is the following:
+
+```
+{'creation_date': '2022-05-12T14:21:37.332088-05:00',
+ 'get_timestamps': True,
+ 'last_updated': '2022-05-12T14:21:42.291564-05:00',
+ 'name': 'Puppies',
+ 'sentiment_negative': 0.031246395781636238,
+ 'sentiment_neutral': 0.8286275863647461,
+ 'sentiment_positive': 0.14012598991394043,
+ 'timestamps': "[{'conf': 1.0, 'end': 8.28, 'start': 7.86, 'word': 'puppy'}, "
+               "{'conf': 1.0, 'end': 11.04, 'start': 10.5, 'word': 'puppies'}, "
+               "{'conf': 0.674508, 'end': 23.28, 'start': 22.77, 'word': "
+               "'puppies'}, {'conf': 1.0, 'end': 26.1, 'start': 25.70725, "
+               "'word': 'puppies'}, {'conf': 0.856674, 'end': 28.14, 'start': "
+               "27.84, 'word': 'puppy'}, {'conf': 0.430765, 'end': 35.4, "
+               "'start': 35.07, 'word': 'puppy'}, {'conf': 1.0, 'end': 52.23, "
+               "'start': 51.81, 'word': 'puppies'}, {'conf': 0.856078, 'end': "
+               "56.07, 'start': 55.8, 'word': 'mother'}, {'conf': 0.724164, "
+               "'end': 57.48, 'start': 57.06, 'word': 'puppies'}]",
+ 'transcript': 'copy from wikipedia the free online encyclopedia at wikipedia '
+               'dot org a puppy is a juvenile dog some puppies can weigh one '
+               'to one and a half kilograms or one to three pounds while '
+               'larger ones can weigh up to seven to eleven kilograms or '
+               'fifteen to twenty three pounds all healthy puppies grow '
+               'quickly after birth of puppies coat color may change as the '
+               'puppy grows older as is commonly seen and breed such as the '
+               'yorkshire terrier he and vernacular english puppy refers '
+               'specifically two dogs while pop they often be used for other '
+               'animals such as seals giraffes guinea pigs or even rats or '
+               'sharks development born after an average of sixty three days '
+               'of gestation puppies a burgeoning am the on that has bitten '
+               'off and eaten by the mother dog puppies begin to nurse almost '
+               'immediately',
+ 'user': 'testuser',
+ 'uuid': 'de52aa55-eca2-4a19-b863-38b1ec5783bd',
+ 'word_freqs': '{"puppy": 3, "puppies": 5, "mother": 1}',
+ 'words': '["puppy", "puppies", "mother"]'}
+ ```
 
 ### Known limitations:
 - only **.mp3 files are supported**
