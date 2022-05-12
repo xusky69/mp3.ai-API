@@ -13,7 +13,7 @@ A **REST API** for **transcribing** and **analyzing** mp3 files with **AI**. Thi
 - Results stored in the database
 - Create, Read & Delete operations for your results
 
-Just to exemplify: Given an .mp3 file about [Puppies](https://en.wikipedia.org/wiki/File:Puppy.ogg) and a set of keywords `["puppy", "puppies", "mother"]`, the output of the API is the following:
+As an example: given an .mp3 file about [Puppies](https://en.wikipedia.org/wiki/File:Puppy.ogg) and a set of keywords `["puppy", "puppies", "mother"]`, the output of the API is the following:
 
 ```
 {'creation_date': '2022-05-12T14:21:37.332088-05:00',
