@@ -13,6 +13,8 @@ COPY ./django_project/requirements.txt .
 # install python dependencies
 RUN pip install -r requirements.txt
 
+RUN apt-get -y install ffmpeg
+
 # copy the cache script to the working directory & run it
 # this will save the cached models to the container and
 # avoids redownloading them each time the container respawns

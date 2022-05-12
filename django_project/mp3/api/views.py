@@ -37,24 +37,28 @@ class RecordingViewSet(viewsets.ModelViewSet):
         serializer.save(user=self.request.user)
         instance = serializer.instance
         word_list = list(set(split_words(words=instance.words)))
-        instance.words = json.dumps(word_list)
-        instance.save()
 
-        print(instance.timestamps)
+        if instance.get_timestamps and settings.ENABLE_VOSK:
 
-        if instance.timestamps and settings.ENABLE_VOSK:
-            
+            print('RUNNING VOSK')
+
             audio_path = str(instance.audio_file.path)
-            
-            result = transcript_file_vosk(path = audio_path, model = model)
-            
+
+            result = transcript_file_vosk(path=audio_path, model=model)
+
             sentence = result['text']
 
             instance.transcript = sentence
 
-            instance.save()
+            instance.words = json.dumps(get_word_freq(
+                word_list=word_list, sentence=sentence))
+
+            timestamps = list(filter(lambda item : item['word'] in word_list, result['result']))
+            instance.timestamps = timestamps
 
         elif settings.ENABLE_HFS2T:
+
+            print('RUNNING WAV2VEC')
 
             audio_path = str(instance.audio_file.path)
 
@@ -68,13 +72,13 @@ class RecordingViewSet(viewsets.ModelViewSet):
 
             instance.transcript = sentence
 
-            instance.save()
+            instance.words = json.dumps(get_word_freq(
+                word_list=word_list, sentence=sentence))
 
         if settings.ENABLE_SENT and (settings.ENABLE_VOSK or
                                      settings.ENABLE_HFS2T):
 
-            instance.words = json.dumps(get_word_freq(
-                word_list=word_list, sentence=sentence))
+            print('RUNNING SENTIMENT')
 
             sentiment = analyze_sentiment(sentence=sentence,
                                           model=sent_model,
@@ -84,4 +88,4 @@ class RecordingViewSet(viewsets.ModelViewSet):
             instance.sentiment_neutral = sentiment[1]
             instance.sentiment_positive = sentiment[2]
 
-            instance.save()
+        instance.save()

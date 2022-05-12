@@ -1,8 +1,9 @@
-from typing import List, Tuple
 import io
 import json
-import torch
 import wave
+from typing import List, Tuple
+
+import torch
 import torchaudio
 from pydub import AudioSegment
 from scipy.special import softmax
@@ -12,6 +13,7 @@ from transformers import (AutoModelForSequenceClassification, AutoTokenizer,
 from vosk import KaldiRecognizer, Model, SetLogLevel
 
 SetLogLevel(-1)
+
 
 def initialize_model_processor_S2T(model_name: str,
                                    processor_name: str) -> Tuple[Speech2TextForConditionalGeneration, Speech2TextProcessor]:
@@ -44,7 +46,7 @@ def transcript_file(data: torch.Tensor,
 
 def transcript_file_vosk(path: str,
                          model: Model,
-                         ):
+                         ) -> dict:
 
     wf = mp3_to_wav(path, skip=0, cut_at=60)
     wf = wave.open(wf, "rb")
@@ -78,8 +80,11 @@ def analyze_sentiment(sentence: str,
     return scores
 
 
-def load_audio_file(file_path: str) -> torch.Tensor:
-    return torchaudio.load(file_path)
+def load_audio_file(file_path: str, max_duration=60, sample_rate=16000) -> torch.Tensor:
+    audio, og_sample_rate = torchaudio.load(file_path)
+    audio = audio[:, 0:max_duration*og_sample_rate]
+    audio = torchaudio.transforms.Resample(og_sample_rate, 16000)(audio)
+    return (audio, sample_rate)
 
 
 def split_words(words: str) -> str:
@@ -106,7 +111,7 @@ def initialize_model_VOSK(model_path: str) -> Model:
     return model
 
 
-def mp3_to_wav(source: str, skip: int = 0, cut_at: int = 30):
+def mp3_to_wav(source: str, skip: int = 0, cut_at: int = 30, sound_rate=16000):
     '''
     based from 
     towardsdatascience.com/transcribe-large-audio-files-offline-with-vosk-a77ee8f7aa28
@@ -115,9 +120,9 @@ def mp3_to_wav(source: str, skip: int = 0, cut_at: int = 30):
     if skip >= cut_at:
         assert False, "'cut_at' vakue must be greater thank 'skip' value"
 
-    sound = AudioSegment.from_mp3(source)  # load source
-    sound = sound.set_channels(1)  # mono
-    sound = sound.set_frame_rate(16000)  # 16000Hz
+    sound = AudioSegment.from_mp3(source)
+    sound = sound.set_channels(1)
+    sound = sound.set_frame_rate(sound_rate)
 
     sound = sound[skip*1000:cut_at*1000]
     # output_path = os.path.splitext(source)[0]+".wav"
