@@ -127,3 +127,12 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# custom 
+docker_volumes/
+django_project/static/
+django_project/assets/
+django_project/audio_files/
+django_project/logs/
+django_project/mp3/migrations/
+django_project/accounts/migrations/

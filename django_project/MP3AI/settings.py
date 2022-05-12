@@ -27,8 +27,8 @@ load_dotenv('.env')
 SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
+DEBUG = os.getenv('DEBUG') == 'TRUE'
+DOCKER = os.getenv('DOCKER') == 'TRUE'
 ALLOWED_HOSTS = []
 
 
@@ -42,12 +42,15 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'django_filters',
     'accounts',
     'mp3',
+    'django_cleanup.apps.CleanupConfig',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -80,12 +83,28 @@ WSGI_APPLICATION = 'MP3AI.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+if DOCKER:
+    # print('USING DOCKER POSTGRES DB')
+    ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'nginx', '[::1]']
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': os.getenv('DB_NAME'),
+            'USER': os.getenv('DB_USER'),
+            'PASSWORD': os.getenv('DB_PSWD'),
+            'HOST': os.getenv('DB_HOST'),
+            'PORT': '',
+        }
     }
-}
+
+else:
+    # print('USING SQLITE DB')
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
 
 
 # Password validation
@@ -106,13 +125,42 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# Logging
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'django_handler': {
+            'level': 'ERROR',
+            'class': 'logging.FileHandler',
+            'filename': os.path.join(BASE_DIR, 'logs/django.log'),
+        },
+        'mp3_handler': {
+            'level': 'ERROR',
+            'class': 'logging.FileHandler',
+            'filename': os.path.join(BASE_DIR, 'logs/mp3.log'),
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['django_handler'],
+            'level': 'ERROR',
+            'propagate': True,
+        },
+        'mp3': {
+            'handlers': ['mp3_handler'],
+            'level': 'ERROR',
+            'propagate': True,
+        },
+    },
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = os.getenv('TIME_ZONE') or 'UTC'
 
 USE_I18N = True
 
@@ -131,4 +179,44 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'accounts.User'
 
-# PROJECT-SPECIFIC SETTINGS
+# REST framework
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
+    'DEFAULT_FILTER_BACKENDS': [
+        'django_filters.rest_framework.DjangoFilterBackend'
+    ]
+}
+
+# WHITENOISE
+STATIC_ROOT = os.path.join(BASE_DIR, 'assets/')
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static/')]
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+WHITENOISE_MANIFEST_STRICT = False
+
+### ------------------------------------------- ###
+### -------- PROJECT-SPECIFIC SETTINGS -------- ###
+### ------------------------------------------- ###
+
+AUDIO_ROOT = os.path.join(BASE_DIR, 'audio_files/')
+
+# SPEECH 2 TEXT VOSK MODEL
+VOSK_MODEL = "vosk/vosk-model-small-en-us-0.15"
+
+# SPEECH 2 TEXT TRANSFORMER MODEL
+S2T_MODEL = os.getenv('S2T_MODEL')
+S2T_PROCESSOR = os.getenv('S2T_PROCESSOR')
+
+# SENTIMENT ANALYSIS TRANSFORMER MODEL
+SENT_MODEL = os.getenv('SENT_MODEL')
+SENT_TKNZR = os.getenv('SENT_TKNZR')
+
+# ENABLE HUGGINGFACE ROBERTA SENTIMENT MODEL
+ENABLE_SENT = True
+
+# ENABLE VOSK S2T MODEL
+ENABLE_VOSK = True
+
+# ENABLE HUGGINGFACE S2T TRANSFORMER
+ENABLE_HFS2T = True

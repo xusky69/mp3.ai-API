@@ -1,0 +1,4 @@
+venv
+.git
+docker_volumes/
+django_project/audio_files
