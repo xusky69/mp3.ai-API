@@ -2,3 +2,4 @@ venv
 .git
 docker_volumes/
 django_project/audio_files
+django_project/venv
