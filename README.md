@@ -46,6 +46,7 @@ ENABLE_SENT = False
 ENABLE_VOSK = False
 ```
 **NOTE**: this disables ML models in order to speed up migrations
+
 6. create & run the initial migrations
 ```
 python manage.py makemigrations accounts
@@ -68,8 +69,8 @@ The API will be served at `localhost:8000/api/v1/recordings/`
 
 
 **PLEASE READ**: 
-a. the first time you spawn the dev server, it will take a long time to boot, as it will be downloading the sentiment transformer model
-b. subsequent dev server executions will also be longer than the usual, as it will take some time to initialize the sentiment transformer model
+- the first time you spawn the dev server, it will take a long time to boot, as it will be downloading the sentiment transformer model
+- subsequent dev server executions will also be longer than the usual, as it will take some time to initialize the sentiment transformer model
 
 ## Setting up docker environment
 1. cd to the repo root & run
@@ -83,6 +84,7 @@ docker-compose exec django python manage.py makemigrations mp3
 docker-compose exec django python manage.py migrate
 ```
 **NOTE**: migrations will be very slow to execute, due to ML models instanciating each time you run one of the above commands
+
 3. take containers down and up again just to make sure the db initializes properly
 ```
 docker-compose down
