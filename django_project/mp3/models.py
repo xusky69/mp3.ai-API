@@ -1,9 +1,9 @@
 import uuid
 
 from accounts.models import User
-from django.conf import settings
-from django.db import models
 from django.core.validators import FileExtensionValidator
+from django.db import models
+from simple_history.models import HistoricalRecords
 
 
 class Recording(models.Model):
@@ -37,6 +37,8 @@ class Recording(models.Model):
 
     creation_date = models.DateTimeField(auto_now_add=True)
     last_updated = models.DateTimeField(auto_now=True)
+
+    history = HistoricalRecords()
 
     class Meta:
         verbose_name = "MP3 Recording"

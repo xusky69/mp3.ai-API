@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'accounts',
     'mp3',
     'django_cleanup.apps.CleanupConfig',
+    'simple_history',
 ]
 
 MIDDLEWARE = [
@@ -58,6 +59,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'simple_history.middleware.HistoryRequestMiddleware',
 ]
 
 ROOT_URLCONF = 'MP3AI.urls'
@@ -150,7 +152,7 @@ LOGGING = {
         },
         'mp3': {
             'handlers': ['mp3_handler'],
-            'level': 'ERROR',
+            'level': 'INFO',
             'propagate': True,
         },
     },

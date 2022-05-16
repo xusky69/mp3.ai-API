@@ -50,7 +50,9 @@ ENABLE_VOSK = False
 ```
 python manage.py makemigrations accounts
 python manage.py makemigrations mp3
+python manage.py makemigrations
 python manage.py migrate
+python manage.py populate_history --auto
 ```
 7. open `MP3AI/settings.py` and at the bottom of the file make sure that both `ENABLE_SENT` and `ENABLE_VOSK` are set to `True`:
 ```

@@ -10,6 +10,7 @@ from mp3.models import Recording
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 
+
 if settings.ENABLE_SENT:
     (sent_model, sent_tokenizer) = initialize_model_tokenizer_SENT(model_name=settings.SENT_MODEL,
                                                                    tokenizer_name=settings.SENT_TKNZR)
