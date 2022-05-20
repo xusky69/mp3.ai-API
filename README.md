@@ -5,7 +5,7 @@
 
 A **REST API** for **transcribing** and **analyzing** mp3 files with **AI**. This project is made using [Django Rest Framework](https://www.django-rest-framework.org/).
 
-![GIF demo](https://imgur.com/e0JLq00.gif)
+![GIF demo](https://imgur.com/DtyobLM.gif)
 
 ### Features:
 - Transcripts a given **.mp3** audio file
