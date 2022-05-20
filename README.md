@@ -1,7 +1,8 @@
 # mp3.ai-API
 
-**[THIS PROJECT IS A WORK IN PROGRESS]**
+![logo](https://imgur.com/TnxYtEM.jpg)
 
+**[THIS PROJECT IS A WORK IN PROGRESS]**
 
 A **REST API** for **transcribing** and **analyzing** mp3 files with **AI**. This project is made using [Django Rest Framework](https://www.django-rest-framework.org/).
 
@@ -21,10 +22,10 @@ A **REST API** for **transcribing** and **analyzing** mp3 files with **AI**. Thi
 - Your audio file will be cropped to the first minute
 
 ### To be done:
-- Support longer audio files
 - Support a more sofisticated auth strategy (JWT, iron-session, etc)
-- Create dedicated microservices for model inference only
-- Move the inference pipeline to the `save` method of the `Recording` model, *in order to keep views thin and models fat*
+- Support longer audio files
+- Move the inference pipeline to the `save` method of the `Recording` model, *in order to keep views thin and models fat...* **or**
+- Implement dedicated microservices for model inference only
 
 ## Setting up dev environment
 
