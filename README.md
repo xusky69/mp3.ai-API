@@ -2,7 +2,10 @@
 
 **[THIS PROJECT IS A WORK IN PROGRESS]**
 
+
 A **REST API** for **transcribing** and **analyzing** mp3 files with **AI**. This project is made using [Django Rest Framework](https://www.django-rest-framework.org/).
+
+![GIF demo](https://imgur.com/e0JLq00.gif)
 
 ### Features:
 - Transcripts a given **.mp3** audio file
@@ -10,8 +13,8 @@ A **REST API** for **transcribing** and **analyzing** mp3 files with **AI**. Thi
 - Given a set of words, returns the timestamps & confidence values for each one
 - Performs a sentiment analysis of the transcript
 - Token authentication
-- Results stored in the database
 - Create, Read & Delete operations for your results
+- In-DB history log for CRUD operations
 
 ### Known limitations:
 - only **.mp3 files are supported**

@@ -32,8 +32,7 @@ class Recording(models.Model):
     words = models.CharField(blank=True, max_length=32,
                              default='', editable=True)
 
-    word_freqs = models.CharField(
-        blank=True, default='', editable=False, max_length=48)
+    word_freqs = models.TextField(blank=True, default='', editable=False)
 
     creation_date = models.DateTimeField(auto_now_add=True)
     last_updated = models.DateTimeField(auto_now=True)
