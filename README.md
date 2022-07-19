@@ -1,8 +1,12 @@
 # mp3.ai-API
 
+![logo](https://imgur.com/TnxYtEM.jpg)
+
 **[THIS PROJECT IS A WORK IN PROGRESS]**
 
 A **REST API** for **transcribing** and **analyzing** mp3 files with **AI**. This project is made using [Django Rest Framework](https://www.django-rest-framework.org/).
+
+![GIF demo](https://imgur.com/DtyobLM.gif)
 
 ### Features:
 - Transcripts a given **.mp3** audio file
@@ -10,8 +14,8 @@ A **REST API** for **transcribing** and **analyzing** mp3 files with **AI**. Thi
 - Given a set of words, returns the timestamps & confidence values for each one
 - Uses an advanced AI transformer model ([roBERTa](https://huggingface.co/cardiffnlp/twitter-roberta-base-sentiment)) to idenfity Neutral, Positive & Negative sentiment levels in the audio file
 - Token authentication
-- Results stored in the database
 - Create, Read & Delete operations for your results
+- In-DB history log for CRUD operations
 
 As an example: given an .mp3 file about [Puppies](https://en.wikipedia.org/wiki/File:Puppy.ogg) and a set of keywords `["puppy", "puppies", "mother"]`, the output of the API is the following:
 
@@ -58,10 +62,10 @@ As an example: given an .mp3 file about [Puppies](https://en.wikipedia.org/wiki/
 - Your audio file will be cropped to the first minute
 
 ### To be done:
-- Support longer audio files
 - Support a more sofisticated auth strategy (JWT, iron-session, etc)
-- Create dedicated microservices for model inference only
-- Move the inference pipeline to the `save` method of the `Recording` model, *in order to keep views thin and models fat*
+- Support longer audio files
+- Move the inference pipeline to the `save` method of the `Recording` model, *in order to keep views thin and models fat...* **or**
+- Implement dedicated microservices for model inference only
 
 ## Setting up dev environment
 
@@ -91,7 +95,9 @@ ENABLE_VOSK = False
 ```
 python manage.py makemigrations accounts
 python manage.py makemigrations mp3
+python manage.py makemigrations
 python manage.py migrate
+python manage.py populate_history --auto
 ```
 7. open `MP3AI/settings.py` and at the bottom of the file make sure that both `ENABLE_SENT` and `ENABLE_VOSK` are set to `True`:
 ```

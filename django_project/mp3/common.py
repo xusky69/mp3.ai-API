@@ -113,7 +113,7 @@ def initialize_model_vosk(model_path: str) -> Model:
 
 def mp3_to_wav(source: str, skip: int = 0, cut_at: int = 30, sound_rate=16000):
     '''
-    based from 
+    based on 
     towardsdatascience.com/transcribe-large-audio-files-offline-with-vosk-a77ee8f7aa28
     '''
 
@@ -125,7 +125,6 @@ def mp3_to_wav(source: str, skip: int = 0, cut_at: int = 30, sound_rate=16000):
     sound = sound.set_frame_rate(sound_rate)
 
     sound = sound[skip*1000:cut_at*1000]
-    # output_path = os.path.splitext(source)[0]+".wav"
 
     audio = io.BytesIO()
     sound.export(audio, format="wav")

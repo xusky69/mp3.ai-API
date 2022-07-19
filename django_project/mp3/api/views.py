@@ -34,7 +34,6 @@ class RecordingViewSet(viewsets.ModelViewSet):
         serializer.save(user=self.request.user)
         instance = serializer.instance
         word_list = list(set(split_words(words=instance.words)))
-        instance.words = json.dumps(word_list)
 
         if settings.ENABLE_VOSK:
 
@@ -46,8 +45,8 @@ class RecordingViewSet(viewsets.ModelViewSet):
 
             instance.transcript = sentence
 
-            instance.word_freqs = json.dumps(get_word_freq(
-                word_list=word_list, sentence=sentence))
+            instance.word_freqs = get_word_freq(
+                word_list=word_list, sentence=sentence)
 
         if settings.ENABLE_VOSK and instance.get_timestamps:
 
